@@ -1,5 +1,6 @@
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -9,6 +10,7 @@ public class picerijaa extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private CardLayout cardLayout;
+    private String pircejaVards;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -98,6 +100,7 @@ public class picerijaa extends JFrame {
         confirmButton.addActionListener(e -> {
             String vards = nameField.getText().trim();
             if (!vards.isEmpty()) {
+                pircejaVards = vards;
                 cardLayout.show(contentPane, "Panel3");
             } else {
                 JOptionPane.showMessageDialog(this, "Lūdzu, ievadiet savu vārdu!", "Kļūda", JOptionPane.ERROR_MESSAGE);
@@ -347,7 +350,7 @@ public class picerijaa extends JFrame {
             JOptionPane.showMessageDialog(picerijaa.this,
                 orderDetails.toString(), 
                 "Pasūtījums apstiprināts", JOptionPane.INFORMATION_MESSAGE);
-        });
+			cardLayout.show(contentPane, "Panel5");});
 
         drinksBottomPanel.add(confirmDrinksButton);
 
@@ -358,14 +361,145 @@ public class picerijaa extends JFrame {
 
         panel4.add(drinksBottomPanel, BorderLayout.SOUTH);
 
+        
+        
+     // Panel5 pircejs
+        JPanel panel5 = new JPanel(new BorderLayout());
+        panel5.setBackground(new Color(255, 228, 181));
+
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(null);
+        infoPanel.setBackground(new Color(255, 228, 181));
+
+        JLabel titleLabel5 = new JLabel("Klienta informācija", SwingConstants.CENTER);
+        titleLabel5.setBounds(0, 43, 886, 28);
+        titleLabel5.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel5.setForeground(new Color(139, 69, 19));
+        infoPanel.add(titleLabel5);
+
+        JLabel nameDisplayLabel = new JLabel("Vārds: " + pircejaVards);
+        nameDisplayLabel.setBounds(250, 100, 400, 25);
+        nameDisplayLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        infoPanel.add(nameDisplayLabel);
+
+        JLabel emailLabel = new JLabel("E-pasts:");
+        emailLabel.setBounds(250, 140, 100, 25);
+        emailLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        infoPanel.add(emailLabel);
+
+        JTextField emailField = new JTextField();
+        emailField.setBounds(350, 140, 300, 25);
+        emailField.setFont(new Font("Arial", Font.PLAIN, 16));
+        infoPanel.add(emailField);
+
+        JLabel phoneLabel = new JLabel("Telefona nr:");
+        phoneLabel.setBounds(250, 180, 100, 25);
+        phoneLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        infoPanel.add(phoneLabel);
+
+        JTextField phoneField = new JTextField();
+        phoneField.setBounds(350, 180, 300, 25);
+        phoneField.setFont(new Font("Arial", Font.PLAIN, 16));
+        infoPanel.add(phoneField);
+
+        JLabel deliveryLabel = new JLabel("Piegādes veids:");
+        deliveryLabel.setBounds(250, 220, 150, 25);
+        deliveryLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        infoPanel.add(deliveryLabel);
+
+        JRadioButton pickupRadio = new JRadioButton("Paņemt uz vietas");
+        pickupRadio.setBounds(400, 220, 150, 25);
+        pickupRadio.setFont(new Font("Arial", Font.PLAIN, 16));
+        pickupRadio.setBackground(new Color(255, 228, 181));
+        pickupRadio.setSelected(true);
+
+        JRadioButton deliveryRadio = new JRadioButton("Piegāde (+5€)");
+        deliveryRadio.setBounds(550, 220, 150, 25);
+        deliveryRadio.setFont(new Font("Arial", Font.PLAIN, 16));
+        deliveryRadio.setBackground(new Color(255, 228, 181));
+
+        ButtonGroup deliveryGroup = new ButtonGroup();
+        deliveryGroup.add(pickupRadio);
+        deliveryGroup.add(deliveryRadio);
+        infoPanel.add(pickupRadio);
+        infoPanel.add(deliveryRadio);
+
+        JLabel addressLabel = new JLabel("Adrese:");
+        addressLabel.setBounds(250, 260, 100, 25);
+        addressLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        addressLabel.setEnabled(false);
+        infoPanel.add(addressLabel);
+
+        JTextField addressField = new JTextField();
+        addressField.setBounds(350, 260, 300, 25);
+        addressField.setFont(new Font("Arial", Font.PLAIN, 16));
+        addressField.setEnabled(false);
+        infoPanel.add(addressField);
+
+        deliveryRadio.addActionListener(e -> {
+            addressLabel.setEnabled(true);
+            addressField.setEnabled(true);
+        });
+
+        pickupRadio.addActionListener(e -> {
+            addressLabel.setEnabled(false);
+            addressField.setEnabled(false);
+            addressField.setText("");
+        });
+
+        JButton confirmButton1 = new JButton("Apstiprināt");
+        confirmButton1.setBounds(350, 320, 150, 40);
+        confirmButton1.setFont(new Font("Arial", Font.PLAIN, 18));
+        confirmButton1.setBackground(new Color(60, 179, 113));
+        confirmButton1.setForeground(Color.WHITE);
+        confirmButton1.addActionListener(e -> {
+            try {
+                String epasts = emailField.getText().trim();
+                String phoneText = phoneField.getText().trim();
+                String adresse = addressField.getText().trim();
+                boolean piegade = deliveryRadio.isSelected();
+                
+                if (epasts.isEmpty() || phoneText.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Lūdzu, aizpildiet visus obligātos laukus!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                if (piegade && adresse.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Lūdzu, ievadiet piegādes adresi!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                int telNum = Integer.parseInt(phoneText);
+                pircejs customer = new pircejs(telNum, pircejaVards, epasts, adresse, piegade);
+                
+                cardLayout.show(contentPane, "Panel1");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Lūdzu, ievadiet pareizu telefona numuru!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        infoPanel.add(confirmButton1);
+
+        JButton backButton1 = new JButton("Atpakaļ");
+        backButton1.setBounds(520, 320, 150, 40);
+        backButton1.setFont(new Font("Arial", Font.PLAIN, 18));
+        backButton1.setBackground(new Color(220, 20, 60));
+        backButton1.setForeground(Color.WHITE);
+        backButton1.addActionListener(e -> cardLayout.show(contentPane, "Panel4"));
+        infoPanel.add(backButton1);
+
+        panel5.add(infoPanel, BorderLayout.CENTER);
+
+        panel5.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                nameDisplayLabel.setText("Vārds: " + pircejaVards);
+            }
+        });
+        
         contentPane.add(panel1, "Panel1");
         contentPane.add(panel2, "Panel2");
-        
-        JLabel lblNewLabel_3 = new JLabel("");
-        lblNewLabel_3.setIcon(new ImageIcon("C:\\Users\\белый\\Desktop\\pizza-testMet\\pictures\\2panel1.png"));
-        lblNewLabel_3.setBounds(636, 10, 335, 225);
-        panel2.add(lblNewLabel_3);
         contentPane.add(panel3, "Panel3");
         contentPane.add(panel4, "Panel4");
+        contentPane.add(panel5, "Panel5");
     }
 }
