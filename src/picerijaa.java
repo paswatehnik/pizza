@@ -1,7 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import javax.swing.*;
 
@@ -25,6 +24,7 @@ public class picerijaa extends JFrame {
     public picerijaa() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 900, 700);
+        setTitle("Picerija");
 
         cardLayout = new CardLayout();
         contentPane = new JPanel(cardLayout);
@@ -84,9 +84,8 @@ public class picerijaa extends JFrame {
         backButton.setFont(new Font("Arial", Font.PLAIN, 18));
         backButton.addActionListener(e -> cardLayout.show(contentPane, "Panel1"));
         panel2.add(backButton);
-        
 
-     // Panel3
+        // Panel3 Pizza
         JPanel panel3 = new JPanel(new BorderLayout());
         panel3.setBackground(new Color(200, 233, 167));
         JLabel pizzaLabel = new JLabel("Izvēlieties picu:", SwingConstants.CENTER);
@@ -192,9 +191,18 @@ public class picerijaa extends JFrame {
             JOptionPane.showMessageDialog(picerijaa.this,
                 orderDetails.toString(), 
                 "Jūsu pasūtījums", JOptionPane.INFORMATION_MESSAGE);
+            
+            cardLayout.show(contentPane, "Panel4");
         });
 
         bottomPanel.add(confirmPizzaButton);
+
+        JButton drinksButton = new JButton("Dzērieni");
+        drinksButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        drinksButton.setBackground(new Color(100, 149, 237));
+        drinksButton.setForeground(Color.WHITE);
+        drinksButton.addActionListener(e -> cardLayout.show(contentPane, "Panel4"));
+        bottomPanel.add(drinksButton);
 
         JButton backButton3 = new JButton("Atpakal");
         backButton3.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -202,9 +210,130 @@ public class picerijaa extends JFrame {
         bottomPanel.add(backButton3);
 
         panel3.add(bottomPanel, BorderLayout.SOUTH);
-      
+
+        // Panel4 dzerieni
+        JPanel panel4 = new JPanel(new BorderLayout());
+        panel4.setBackground(new Color(167, 200, 233));
+        JLabel drinksLabel = new JLabel("Izvēlieties dzērienus (nav obligāti):", SwingConstants.CENTER);
+        drinksLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        drinksLabel.setForeground(new Color(139, 69, 19));
+        panel4.add(drinksLabel, BorderLayout.NORTH);
+
+        List<dzerieni> drinks = dzerieni.getDrinks();
+        JPanel drinksOptionsPanel = new JPanel();
+        drinksOptionsPanel.setLayout(new BoxLayout(drinksOptionsPanel, BoxLayout.Y_AXIS));
+        drinksOptionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        List<JSpinner> drinksQuantitySpinners = new ArrayList<>();
+
+        for (dzerieni drink : drinks) {
+            JPanel drinkPanel = new JPanel(new BorderLayout(10, 10));
+            drinkPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            drinkPanel.setBackground(new Color(255, 255, 255, 200));
+            
+            ImageIcon icon = new ImageIcon(drink.picture);
+            Image scaledImg = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImg);
+            JLabel imageLabel = new JLabel(scaledIcon);
+            drinkPanel.add(imageLabel, BorderLayout.WEST);
+            
+            JPanel infoPanel = new JPanel();
+            infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+            infoPanel.setBackground(new Color(255, 255, 255, 0));
+            
+            JLabel drinkNameLabel = new JLabel(drink.nosaukums.get(0));
+            drinkNameLabel.setFont(new Font("Arial", Font.BOLD, 20));
+            infoPanel.add(drinkNameLabel);
+            
+            JPanel priceQuantityPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            priceQuantityPanel.setBackground(new Color(255, 255, 255, 0));
+            
+            JLabel priceLabel = new JLabel("Cena: €" + drink.cena.get(0));
+            priceQuantityPanel.add(priceLabel);
+            
+            SpinnerNumberModel spinnerModel = new SpinnerNumberModel(0, 0, 10, 1);
+            JSpinner quantitySpinner = new JSpinner(spinnerModel);
+            quantitySpinner.setPreferredSize(new Dimension(50, 20));
+            priceQuantityPanel.add(new JLabel("Daudzums:"));
+            priceQuantityPanel.add(quantitySpinner);
+            drinksQuantitySpinners.add(quantitySpinner);
+            
+            infoPanel.add(priceQuantityPanel);
+            infoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            
+            JTextArea description = new JTextArea("Apraksts: " + drink.apraksts.get(0));
+            description.setFont(new Font("Arial", Font.PLAIN, 14));
+            description.setEditable(false);
+            description.setLineWrap(true);
+            description.setWrapStyleWord(true);
+            description.setBackground(new Color(255, 255, 255, 0));
+            infoPanel.add(description);
+            
+            drinkPanel.add(infoPanel, BorderLayout.CENTER);
+            
+            drinksOptionsPanel.add(drinkPanel);
+            drinksOptionsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        }
+
+        JScrollPane drinksScrollPane = new JScrollPane(drinksOptionsPanel);
+        panel4.add(drinksScrollPane, BorderLayout.CENTER);
+
+        JPanel drinksBottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+        JButton confirmDrinksButton = new JButton("Noformet pasūtījumu");
+        confirmDrinksButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        confirmDrinksButton.setBackground(new Color(60, 179, 113));
+        confirmDrinksButton.setForeground(Color.WHITE);
+        confirmDrinksButton.addActionListener(e -> {
+            StringBuilder orderDetails = new StringBuilder("Jūsu pasūtījums:\n\n");
+            double totalPrice = 0.0;
+            boolean irDzerieni = false;
+            
+            for (int i = 0; i < drinks.size(); i++) {
+                int quantity = (Integer) drinksQuantitySpinners.get(i).getValue();
+                if (quantity > 0) {
+                	irDzerieni = true;
+                    break;
+                }
+            }
+            
+            if (irDzerieni) {
+                orderDetails.append("Dzērieni:\n");
+                for (int i = 0; i < drinks.size(); i++) {
+                    int quantity = (Integer) drinksQuantitySpinners.get(i).getValue();
+                    if (quantity > 0) {
+                        dzerieni drink = drinks.get(i);
+                        double price = drink.cena.get(0) * quantity;
+                        
+                        orderDetails.append("- ").append(drink.nosaukums.get(0)).append(" x").append(quantity)
+                                    .append(" - €").append(String.format("%.2f", price)).append("\n");
+                        totalPrice += price;
+                    }
+                }
+                orderDetails.append("\n");
+            }
+            
+            if (irDzerieni) {
+                orderDetails.append("Kopējā summa par dzērieniem: €").append(String.format("%.2f", totalPrice)).append("\n\n");
+            }
+            
+            JOptionPane.showMessageDialog(picerijaa.this,
+                orderDetails.toString(), 
+                "Pasūtījums apstiprināts", JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        drinksBottomPanel.add(confirmDrinksButton);
+
+        JButton backButton4 = new JButton("Atpakal");
+        backButton4.setFont(new Font("Arial", Font.PLAIN, 18));
+        backButton4.addActionListener(e -> cardLayout.show(contentPane, "Panel3"));
+        drinksBottomPanel.add(backButton4);
+
+        panel4.add(drinksBottomPanel, BorderLayout.SOUTH);
+
         contentPane.add(panel1, "Panel1");
         contentPane.add(panel2, "Panel2");
         contentPane.add(panel3, "Panel3");
+        contentPane.add(panel4, "Panel4");
     }
 }

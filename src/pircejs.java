@@ -7,6 +7,6 @@ public class pircejs {
 		this.telNum = telNum;
 		this.vards = vards;
 		this.epasts = epasts;
-		this.epasts = adresse;
+		this.adresse = adresse;
 	}
 }
