@@ -36,37 +36,62 @@ public class picerijaa extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(new Color(255, 228, 181));
         JButton orderButton = new JButton("Pasūtīt picas");
-        orderButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        orderButton.setBounds(351, 134, 197, 65);
+        orderButton.setFont(new Font("Arial", Font.PLAIN, 29));
         orderButton.setBackground(new Color(60, 179, 113));
         orderButton.setForeground(Color.WHITE);
         orderButton.addActionListener(e -> cardLayout.show(contentPane, "Panel2"));
+        buttonPanel.setLayout(null);
         buttonPanel.add(orderButton);
         JButton exitButton = new JButton("Iziet");
-        exitButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        exitButton.setBounds(690, 570, 147, 41);
+        exitButton.setFont(new Font("Arial", Font.PLAIN, 21));
         exitButton.setBackground(new Color(220, 20, 60));
         exitButton.setForeground(Color.WHITE);
         exitButton.addActionListener(e -> System.exit(0));
         buttonPanel.add(exitButton);
         panel1.add(buttonPanel, BorderLayout.CENTER);
         JLabel titleLabel = new JLabel("Welcome to Pizza Shop!", SwingConstants.CENTER);
+        titleLabel.setBounds(10, 43, 886, 28);
+        buttonPanel.add(titleLabel);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setForeground(new Color(139, 69, 19));
-        panel1.add(titleLabel, BorderLayout.NORTH);
+        
+        JLabel lblNewLabel = new JLabel("");
+        lblNewLabel.setIcon(new ImageIcon("C:\\Users\\белый\\Desktop\\pizza-testMet\\pictures\\mainLabel.png"));
+        lblNewLabel.setBounds(569, 66, 288, 172);
+        buttonPanel.add(lblNewLabel);
+        
+        JLabel lblNewLabel_1 = new JLabel("");
+        lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\белый\\Desktop\\pizza-testMet\\pictures\\mainLabel2.png"));
+        lblNewLabel_1.setBounds(588, 325, 219, 203);
+        buttonPanel.add(lblNewLabel_1);
+        
+        JLabel lblNewLabel_2 = new JLabel("");
+        lblNewLabel_2.setIcon(new ImageIcon("C:\\Users\\белый\\Desktop\\pizza-testMet\\pictures\\mainLabel3.png"));
+        lblNewLabel_2.setBounds(-16, 134, 594, 523);
+        buttonPanel.add(lblNewLabel_2);
 
         // Panel2
         JPanel panel2 = new JPanel();
         panel2.setBackground(new Color(233, 200, 167));
         panel2.setLayout(null);
+        
+        JLabel titleLabel_1 = new JLabel("Welcome to Pizza Shop!", SwingConstants.CENTER);
+        titleLabel_1.setForeground(new Color(139, 69, 19));
+        titleLabel_1.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel_1.setBounds(0, 48, 886, 28);
+        panel2.add(titleLabel_1);
         JLabel nameLabel = new JLabel("Ievadiet jusu vardu:", SwingConstants.CENTER);
-        nameLabel.setBounds(23, 134, 186, 22);
+        nameLabel.setBounds(10, 185, 186, 22);
         nameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         panel2.add(nameLabel);
         JTextField nameField = new JTextField(20);
-        nameField.setBounds(194, 134, 208, 22);
+        nameField.setBounds(185, 185, 208, 22);
         nameField.setFont(new Font("Arial", Font.PLAIN, 16));
         panel2.add(nameField);
         JButton confirmButton = new JButton("Apstiprināt");
-        confirmButton.setBounds(194, 180, 208, 31);
+        confirmButton.setBounds(403, 181, 208, 31);
         confirmButton.setFont(new Font("Arial", Font.PLAIN, 18));
         confirmButton.setBackground(new Color(60, 179, 113));
         confirmButton.setForeground(Color.WHITE);
@@ -80,9 +105,11 @@ public class picerijaa extends JFrame {
         });
         panel2.add(confirmButton);
         JButton backButton = new JButton("Atpakal");
-        backButton.setBounds(603, 526, 173, 31);
-        backButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        backButton.addActionListener(e -> cardLayout.show(contentPane, "Panel1"));
+        backButton.setBounds(690, 570, 147, 41);
+        backButton.setFont(new Font("Arial", Font.PLAIN, 21));
+        backButton.setBackground(new Color(220, 20, 60));
+        backButton.setForeground(Color.WHITE);
+        backButton.addActionListener(e -> System.exit(0));
         panel2.add(backButton);
 
         // Panel3 Pizza
@@ -333,6 +360,11 @@ public class picerijaa extends JFrame {
 
         contentPane.add(panel1, "Panel1");
         contentPane.add(panel2, "Panel2");
+        
+        JLabel lblNewLabel_3 = new JLabel("");
+        lblNewLabel_3.setIcon(new ImageIcon("C:\\Users\\белый\\Desktop\\pizza-testMet\\pictures\\2panel1.png"));
+        lblNewLabel_3.setBounds(636, 10, 335, 225);
+        panel2.add(lblNewLabel_3);
         contentPane.add(panel3, "Panel3");
         contentPane.add(panel4, "Panel4");
     }
