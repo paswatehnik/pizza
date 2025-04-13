@@ -11,6 +11,12 @@ public class picerijaa extends JFrame {
     private JPanel contentPane;
     private CardLayout cardLayout;
     private String pircejaVards;
+    private order aktualaisPasutijums;
+    
+    private List<pica> picuSaraksts;
+    private List<dzerieni> dzerienuSaraksts;
+    private List<JSpinner> picuDaudzumaSkaititaji;
+    private List<JSpinner> dzerienuDaudzumaSkaititaji;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -23,14 +29,19 @@ public class picerijaa extends JFrame {
         });
     }
 
-    public picerijaa() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public picerijaa() {   	
+    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 900, 700);
         setTitle("Picerija");
 
         cardLayout = new CardLayout();
         contentPane = new JPanel(cardLayout);
         setContentPane(contentPane);
+
+        picuSaraksts = pica.getPizzas();
+        dzerienuSaraksts = dzerieni.getDrinks();
+        picuDaudzumaSkaititaji = new ArrayList<>();
+        dzerienuDaudzumaSkaititaji = new ArrayList<>();
 
         // Panel1
         JPanel panel1 = new JPanel(new BorderLayout());
@@ -123,14 +134,11 @@ public class picerijaa extends JFrame {
         pizzaLabel.setForeground(new Color(139, 69, 19));
         panel3.add(pizzaLabel, BorderLayout.NORTH);
 
-        List<pica> pizzas = pica.getPizzas();
         JPanel optionsPanel = new JPanel();
         optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.Y_AXIS));
         optionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        List<JSpinner> quantitySpinners = new ArrayList<>();
-
-        for (pica pizza : pizzas) {
+        for (pica pizza : picuSaraksts) {
             JPanel pizzaPanel = new JPanel(new BorderLayout(10, 10));
             pizzaPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
             pizzaPanel.setBackground(new Color(255, 255, 255, 200));
@@ -164,7 +172,7 @@ public class picerijaa extends JFrame {
             quantitySpinner.setPreferredSize(new Dimension(50, 20));
             sizeQuantityPanel.add(new JLabel("Daudzums:"));
             sizeQuantityPanel.add(quantitySpinner);
-            quantitySpinners.add(quantitySpinner);
+            picuDaudzumaSkaititaji.add(quantitySpinner);
             
             infoPanel.add(sizeQuantityPanel);
             infoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -197,16 +205,20 @@ public class picerijaa extends JFrame {
             double totalPrice = 0.0;
             int totalPizzas = 0;
             
-            for (int i = 0; i < pizzas.size(); i++) {
-                int quantity = (Integer) quantitySpinners.get(i).getValue();
-                if (quantity > 0) {
-                    pica pizza = pizzas.get(i);
-                    String size = pizza.izmers.get(0);
-                    double price = pizza.cenas.get(0) * quantity;
+            for (int i = 0; i < picuSaraksts.size(); i++) {
+                int daudzums = (Integer) picuDaudzumaSkaititaji.get(i).getValue();
+                if (daudzums > 0) {
+                    pica pizza = picuSaraksts.get(i);
+                    String izmers = pizza.izmers.get(0); // Берем первый размер из списка
+                    double cena = pizza.cenas.get(0) * daudzums;
                     
-                    orderDetails.append(pizza.nosaukums).append(" (").append(size).append(") x").append(quantity).append(" - €").append(String.format("%.2f", price)).append("\n");
-                    totalPrice += price;
-                    totalPizzas += quantity;
+                    orderDetails.append(pizza.nosaukums.toString())
+                               .append(" (").append(izmers).append(")")
+                               .append(" x").append(daudzums)
+                               .append(" - €").append(String.format("%.2f", cena))
+                               .append("\n");
+                    totalPrice += cena;
+                    totalPizzas += daudzums;
                 }
             }
             
@@ -256,7 +268,7 @@ public class picerijaa extends JFrame {
 
         List<JSpinner> drinksQuantitySpinners = new ArrayList<>();
 
-        for (dzerieni drink : drinks) {
+        for (dzerieni drink : dzerienuSaraksts) {
             JPanel drinkPanel = new JPanel(new BorderLayout(10, 10));
             drinkPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
             drinkPanel.setBackground(new Color(255, 255, 255, 200));
@@ -286,7 +298,7 @@ public class picerijaa extends JFrame {
             quantitySpinner.setPreferredSize(new Dimension(50, 20));
             priceQuantityPanel.add(new JLabel("Daudzums:"));
             priceQuantityPanel.add(quantitySpinner);
-            drinksQuantitySpinners.add(quantitySpinner);
+            dzerienuDaudzumaSkaititaji.add(quantitySpinner);
             
             infoPanel.add(priceQuantityPanel);
             infoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -315,42 +327,29 @@ public class picerijaa extends JFrame {
         confirmDrinksButton.setBackground(new Color(60, 179, 113));
         confirmDrinksButton.setForeground(Color.WHITE);
         confirmDrinksButton.addActionListener(e -> {
-            StringBuilder orderDetails = new StringBuilder("Jūsu pasūtījums:\n\n");
-            double totalPrice = 0.0;
-            boolean irDzerieni = false;
+            order tempOrder = new order(new pircejs(0, pircejaVards, "", "", false));
             
-            for (int i = 0; i < drinks.size(); i++) {
-                int quantity = (Integer) drinksQuantitySpinners.get(i).getValue();
-                if (quantity > 0) {
-                	irDzerieni = true;
-                    break;
+            for (int i = 0; i < picuSaraksts.size(); i++) {
+                int daudzums = (Integer) picuDaudzumaSkaititaji.get(i).getValue();
+                if (daudzums > 0) {
+                    tempOrder.pievienotPicu(picuSaraksts.get(i), daudzums);
                 }
             }
             
-            if (irDzerieni) {
-                orderDetails.append("Dzērieni:\n");
-                for (int i = 0; i < drinks.size(); i++) {
-                    int quantity = (Integer) drinksQuantitySpinners.get(i).getValue();
-                    if (quantity > 0) {
-                        dzerieni drink = drinks.get(i);
-                        double price = drink.cena.get(0) * quantity;
-                        
-                        orderDetails.append("- ").append(drink.nosaukums.get(0)).append(" x").append(quantity)
-                                    .append(" - €").append(String.format("%.2f", price)).append("\n");
-                        totalPrice += price;
-                    }
+            for (int i = 0; i < dzerienuSaraksts.size(); i++) {
+                int daudzums = (Integer) dzerienuDaudzumaSkaititaji.get(i).getValue();
+                if (daudzums > 0) {
+                    tempOrder.pievienotDzerienu(dzerienuSaraksts.get(i), daudzums);
                 }
-                orderDetails.append("\n");
             }
             
-            if (irDzerieni) {
-                orderDetails.append("Kopējā summa par dzērieniem: €").append(String.format("%.2f", totalPrice)).append("\n\n");
+            if (tempOrder.getPicas().isEmpty() && tempOrder.getDzerieni().isEmpty()) {
+                JOptionPane.showMessageDialog(picerijaa.this, 
+                    "Lūdzu, izvēlieties vismaz vienu produktu!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-            
-            JOptionPane.showMessageDialog(picerijaa.this,
-                orderDetails.toString(), 
-                "Pasūtījums apstiprināts", JOptionPane.INFORMATION_MESSAGE);
-			cardLayout.show(contentPane, "Panel5");});
+            cardLayout.show(contentPane, "Panel5");
+        });
 
         drinksBottomPanel.add(confirmDrinksButton);
 
@@ -363,136 +362,228 @@ public class picerijaa extends JFrame {
 
         
         
-     // Panel5 pircejs
+     // Panel5 - Klienta informācija
         JPanel panel5 = new JPanel(new BorderLayout());
         panel5.setBackground(new Color(255, 228, 181));
 
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(null);
-        infoPanel.setBackground(new Color(255, 228, 181));
+        JPanel infoPanelis = new JPanel();
+        infoPanelis.setLayout(null);
+        infoPanelis.setBackground(new Color(255, 228, 181));
 
-        JLabel titleLabel5 = new JLabel("Klienta informācija", SwingConstants.CENTER);
-        titleLabel5.setBounds(0, 43, 886, 28);
-        titleLabel5.setFont(new Font("Arial", Font.BOLD, 24));
-        titleLabel5.setForeground(new Color(139, 69, 19));
-        infoPanel.add(titleLabel5);
+        JLabel virsrakts5 = new JLabel("Klienta informācija", SwingConstants.CENTER);
+        virsrakts5.setBounds(0, 43, 886, 28);
+        virsrakts5.setFont(new Font("Arial", Font.BOLD, 24));
+        virsrakts5.setForeground(new Color(139, 69, 19));
+        infoPanelis.add(virsrakts5);
 
-        JLabel nameDisplayLabel = new JLabel("Vārds: " + pircejaVards);
-        nameDisplayLabel.setBounds(250, 100, 400, 25);
-        nameDisplayLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        infoPanel.add(nameDisplayLabel);
+        JLabel vardaLabel = new JLabel("Vards: " + pircejaVards);
+        vardaLabel.setBounds(250, 100, 400, 25);
+        vardaLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        infoPanelis.add(vardaLabel);
 
-        JLabel emailLabel = new JLabel("E-pasts:");
-        emailLabel.setBounds(250, 140, 100, 25);
-        emailLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        infoPanel.add(emailLabel);
+        JLabel epastaLabel = new JLabel("E-pasts:");
+        epastaLabel.setBounds(250, 140, 100, 25);
+        epastaLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        infoPanelis.add(epastaLabel);
 
-        JTextField emailField = new JTextField();
-        emailField.setBounds(350, 140, 300, 25);
-        emailField.setFont(new Font("Arial", Font.PLAIN, 16));
-        infoPanel.add(emailField);
+        JTextField epastaLauks = new JTextField();
+        epastaLauks.setBounds(350, 140, 300, 25);
+        epastaLauks.setFont(new Font("Arial", Font.PLAIN, 16));
+        infoPanelis.add(epastaLauks);
 
-        JLabel phoneLabel = new JLabel("Telefona nr:");
-        phoneLabel.setBounds(250, 180, 100, 25);
-        phoneLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        infoPanel.add(phoneLabel);
+        JLabel telefonaLabel = new JLabel("Telefona nr:");
+        telefonaLabel.setBounds(250, 180, 100, 25);
+        telefonaLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        infoPanelis.add(telefonaLabel);
 
-        JTextField phoneField = new JTextField();
-        phoneField.setBounds(350, 180, 300, 25);
-        phoneField.setFont(new Font("Arial", Font.PLAIN, 16));
-        infoPanel.add(phoneField);
+        JTextField telefonaLauks = new JTextField();
+        telefonaLauks.setBounds(350, 180, 300, 25);
+        telefonaLauks.setFont(new Font("Arial", Font.PLAIN, 16));
+        infoPanelis.add(telefonaLauks);
 
-        JLabel deliveryLabel = new JLabel("Piegādes veids:");
-        deliveryLabel.setBounds(250, 220, 150, 25);
-        deliveryLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        infoPanel.add(deliveryLabel);
+        JLabel piegadesLabel = new JLabel("Piegades veids:");
+        piegadesLabel.setBounds(250, 220, 150, 25);
+        piegadesLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        infoPanelis.add(piegadesLabel);
 
-        JRadioButton pickupRadio = new JRadioButton("Paņemt uz vietas");
-        pickupRadio.setBounds(400, 220, 150, 25);
-        pickupRadio.setFont(new Font("Arial", Font.PLAIN, 16));
-        pickupRadio.setBackground(new Color(255, 228, 181));
-        pickupRadio.setSelected(true);
+        JRadioButton uzVietasRadio = new JRadioButton("Parnemt uz vietas");
+        uzVietasRadio.setBounds(400, 220, 150, 25);
+        uzVietasRadio.setFont(new Font("Arial", Font.PLAIN, 16));
+        uzVietasRadio.setBackground(new Color(255, 228, 181));
+        uzVietasRadio.setSelected(true);
 
-        JRadioButton deliveryRadio = new JRadioButton("Piegāde (+5€)");
-        deliveryRadio.setBounds(550, 220, 150, 25);
-        deliveryRadio.setFont(new Font("Arial", Font.PLAIN, 16));
-        deliveryRadio.setBackground(new Color(255, 228, 181));
+        JRadioButton piegadeRadio = new JRadioButton("Piegade (+5€)");
+        piegadeRadio.setBounds(550, 220, 150, 25);
+        piegadeRadio.setFont(new Font("Arial", Font.PLAIN, 16));
+        piegadeRadio.setBackground(new Color(255, 228, 181));
 
-        ButtonGroup deliveryGroup = new ButtonGroup();
-        deliveryGroup.add(pickupRadio);
-        deliveryGroup.add(deliveryRadio);
-        infoPanel.add(pickupRadio);
-        infoPanel.add(deliveryRadio);
+        ButtonGroup piegadesGrupa = new ButtonGroup();
+        piegadesGrupa.add(uzVietasRadio);
+        piegadesGrupa.add(piegadeRadio);
+        infoPanelis.add(uzVietasRadio);
+        infoPanelis.add(piegadeRadio);
 
-        JLabel addressLabel = new JLabel("Adrese:");
-        addressLabel.setBounds(250, 260, 100, 25);
-        addressLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        addressLabel.setEnabled(false);
-        infoPanel.add(addressLabel);
+        JLabel adresesLabel = new JLabel("Adrese:");
+        adresesLabel.setBounds(250, 260, 100, 25);
+        adresesLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        adresesLabel.setEnabled(false);
+        infoPanelis.add(adresesLabel);
 
-        JTextField addressField = new JTextField();
-        addressField.setBounds(350, 260, 300, 25);
-        addressField.setFont(new Font("Arial", Font.PLAIN, 16));
-        addressField.setEnabled(false);
-        infoPanel.add(addressField);
+        JTextField adresesLauks = new JTextField();
+        adresesLauks.setBounds(350, 260, 300, 25);
+        adresesLauks.setFont(new Font("Arial", Font.PLAIN, 16));
+        adresesLauks.setEnabled(false);
+        infoPanelis.add(adresesLauks);
 
-        deliveryRadio.addActionListener(e -> {
-            addressLabel.setEnabled(true);
-            addressField.setEnabled(true);
+        piegadeRadio.addActionListener(e -> {
+            adresesLabel.setEnabled(true);
+            adresesLauks.setEnabled(true);
         });
 
-        pickupRadio.addActionListener(e -> {
-            addressLabel.setEnabled(false);
-            addressField.setEnabled(false);
-            addressField.setText("");
+        uzVietasRadio.addActionListener(e -> {
+            adresesLabel.setEnabled(false);
+            adresesLauks.setEnabled(false);
+            adresesLauks.setText("");
         });
 
-        JButton confirmButton1 = new JButton("Apstiprināt");
-        confirmButton1.setBounds(350, 320, 150, 40);
-        confirmButton1.setFont(new Font("Arial", Font.PLAIN, 18));
-        confirmButton1.setBackground(new Color(60, 179, 113));
-        confirmButton1.setForeground(Color.WHITE);
-        confirmButton1.addActionListener(e -> {
+        JButton apstiprinatPoga = new JButton("Apstiprinat");
+        apstiprinatPoga.setBounds(350, 320, 150, 40);
+        apstiprinatPoga.setFont(new Font("Arial", Font.PLAIN, 18));
+        apstiprinatPoga.setBackground(new Color(60, 179, 113));
+        apstiprinatPoga.setForeground(Color.WHITE);
+        apstiprinatPoga.addActionListener(e -> {
             try {
-                String epasts = emailField.getText().trim();
-                String phoneText = phoneField.getText().trim();
-                String adresse = addressField.getText().trim();
-                boolean piegade = deliveryRadio.isSelected();
+                String epasts = epastaLauks.getText().trim();
+                String telefons = telefonaLauks.getText().trim();
+                String adrese = adresesLauks.getText().trim();
+                boolean piegade = piegadeRadio.isSelected();
                 
-                if (epasts.isEmpty() || phoneText.isEmpty()) {
+                if (epasts.isEmpty() || telefons.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Lūdzu, aizpildiet visus obligātos laukus!", "Kļūda", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 
-                if (piegade && adresse.isEmpty()) {
+                if (piegade && adrese.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Lūdzu, ievadiet piegādes adresi!", "Kļūda", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 
-                int telNum = Integer.parseInt(phoneText);
-                pircejs customer = new pircejs(telNum, pircejaVards, epasts, adresse, piegade);
+                int telNum = Integer.parseInt(telefons);
+                pircejs klients = new pircejs(telNum, pircejaVards, epasts, adrese, piegade);
                 
-                cardLayout.show(contentPane, "Panel1");
+                aktualaisPasutijums = new order(klients);
+                
+                for (int i = 0; i < picuSaraksts.size(); i++) {
+                    int daudzums = (Integer) picuDaudzumaSkaititaji.get(i).getValue();
+                    if (daudzums > 0) {
+                        aktualaisPasutijums.pievienotPicu(picuSaraksts.get(i), daudzums);
+                    }
+                }
+                
+                for (int i = 0; i < dzerienuSaraksts.size(); i++) {
+                    int daudzums = (Integer) dzerienuDaudzumaSkaititaji.get(i).getValue();
+                    if (daudzums > 0) {
+                        aktualaisPasutijums.pievienotDzerienu(dzerienuSaraksts.get(i), daudzums);
+                    }
+                }
+                
+                if (piegade) {
+                    aktualaisPasutijums.pasutijumaCena += 5.0;
+                }
+                
+                cardLayout.show(contentPane, "Panel6");
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Lūdzu, ievadiet pareizu telefona numuru!", "Kļūda", JOptionPane.ERROR_MESSAGE);
             }
         });
-        infoPanel.add(confirmButton1);
+        infoPanelis.add(apstiprinatPoga);
 
-        JButton backButton1 = new JButton("Atpakaļ");
-        backButton1.setBounds(520, 320, 150, 40);
-        backButton1.setFont(new Font("Arial", Font.PLAIN, 18));
-        backButton1.setBackground(new Color(220, 20, 60));
-        backButton1.setForeground(Color.WHITE);
-        backButton1.addActionListener(e -> cardLayout.show(contentPane, "Panel4"));
-        infoPanel.add(backButton1);
+        JButton atpakalPoga1 = new JButton("Atpakal");
+        atpakalPoga1.setBounds(520, 320, 150, 40);
+        atpakalPoga1.setFont(new Font("Arial", Font.PLAIN, 18));
+        atpakalPoga1.setBackground(new Color(220, 20, 60));
+        atpakalPoga1.setForeground(Color.WHITE);
+        atpakalPoga1.addActionListener(e -> cardLayout.show(contentPane, "Panel4"));
+        infoPanelis.add(atpakalPoga1);
 
-        panel5.add(infoPanel, BorderLayout.CENTER);
+        panel5.add(infoPanelis, BorderLayout.CENTER);
 
         panel5.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
-                nameDisplayLabel.setText("Vārds: " + pircejaVards);
+                vardaLabel.setText("Vards: " + pircejaVards);
+                epastaLauks.setText("");
+                telefonaLauks.setText("");
+                adresesLauks.setText("");
+                uzVietasRadio.setSelected(true);
+                adresesLabel.setEnabled(false);
+                adresesLauks.setEnabled(false);
+            }
+        });
+
+        // Panel6 - Pasutijuma kopsavilkums
+        JPanel panel6 = new JPanel(new BorderLayout());
+        panel6.setBackground(new Color(200, 233, 200));
+
+        JLabel virsrakts6 = new JLabel("Jūsu pasūtījuma kopsavilkums", SwingConstants.CENTER);
+        virsrakts6.setFont(new Font("Arial", Font.BOLD, 24));
+        virsrakts6.setForeground(new Color(139, 69, 19));
+        panel6.add(virsrakts6, BorderLayout.NORTH);
+
+        JTextArea pasutijumaKopsavilkums = new JTextArea();
+        pasutijumaKopsavilkums.setFont(new Font("Arial", Font.PLAIN, 16));
+        pasutijumaKopsavilkums.setEditable(false);
+        pasutijumaKopsavilkums.setLineWrap(true);
+        pasutijumaKopsavilkums.setWrapStyleWord(true);
+        pasutijumaKopsavilkums.setBackground(new Color(255, 255, 255, 200));
+        pasutijumaKopsavilkums.setMargin(new Insets(10, 10, 10, 10));
+
+        JScrollPane kopsavilkumaRitjosla = new JScrollPane(pasutijumaKopsavilkums);
+        panel6.add(kopsavilkumaRitjosla, BorderLayout.CENTER);
+
+        JPanel kopsavilkumaPogas = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        kopsavilkumaPogas.setBackground(new Color(200, 233, 200));
+
+        JButton apstiprinatPasutijumuPoga = new JButton("Apstiprinat pasūtījumu");
+        apstiprinatPasutijumuPoga.setFont(new Font("Arial", Font.PLAIN, 18));
+        apstiprinatPasutijumuPoga.setBackground(new Color(60, 179, 113));
+        apstiprinatPasutijumuPoga.setForeground(Color.WHITE);
+        apstiprinatPasutijumuPoga.addActionListener(e -> {
+            if (aktualaisPasutijums != null) {
+                aktualaisPasutijums.pabeigtPasutijumu();
+                JOptionPane.showMessageDialog(picerijaa.this,
+                    "Paldies par pasūtījumu! Jūsu pica tiks sagatavota drīz.\n\n" + 
+                    aktualaisPasutijums.getPasutijumaKopsavilkums(),
+                    "Pasūtījums apstiprināts", JOptionPane.INFORMATION_MESSAGE);
+                
+                resetForm();
+                cardLayout.show(contentPane, "Panel1");
+            }
+        });
+        kopsavilkumaPogas.add(apstiprinatPasutijumuPoga);
+
+        JButton pievienotVelPoga = new JButton("Pievienot vel produktus");
+        pievienotVelPoga.setFont(new Font("Arial", Font.PLAIN, 18));
+        pievienotVelPoga.setBackground(new Color(100, 149, 237));
+        pievienotVelPoga.setForeground(Color.WHITE);
+        pievienotVelPoga.addActionListener(e -> cardLayout.show(contentPane, "Panel3"));
+        kopsavilkumaPogas.add(pievienotVelPoga);
+
+        JButton atpakalPoga6 = new JButton("Atpakal");
+        atpakalPoga6.setFont(new Font("Arial", Font.PLAIN, 18));
+        atpakalPoga6.setBackground(new Color(220, 20, 60));
+        atpakalPoga6.setForeground(Color.WHITE);
+        atpakalPoga6.addActionListener(e -> cardLayout.show(contentPane, "Panel5"));
+        kopsavilkumaPogas.add(atpakalPoga6);
+
+        panel6.add(kopsavilkumaPogas, BorderLayout.SOUTH);
+
+        panel6.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                if (aktualaisPasutijums != null) {
+                    pasutijumaKopsavilkums.setText(aktualaisPasutijums.getPasutijumaKopsavilkums());
+                }
             }
         });
         
@@ -501,5 +592,18 @@ public class picerijaa extends JFrame {
         contentPane.add(panel3, "Panel3");
         contentPane.add(panel4, "Panel4");
         contentPane.add(panel5, "Panel5");
+        contentPane.add(panel6, "Panel6");           
     }
-}
+        
+        private void resetForm() {
+            for (JSpinner spinner : picuDaudzumaSkaititaji) {
+                spinner.setValue(0);
+            }
+            for (JSpinner spinner : dzerienuDaudzumaSkaititaji) {
+                spinner.setValue(0);
+            }
+            aktualaisPasutijums = null;
+            pircejaVards = "";
+        }
+    }
+        
