@@ -6,6 +6,7 @@ public class pircejs {
 	public pircejs(int telNum, String vards, String epasts, String adresse) {
 		this.telNum = telNum;
 		this.vards = vards;
+		this.epasts = epasts;
 		this.epasts = adresse;
 	}
 }
