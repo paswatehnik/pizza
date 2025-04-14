@@ -39,6 +39,9 @@ public class order {
             pasutijumaCena += 5.0;
         }
         this.pabeigts = true;
+        
+        faili orderFile = new faili("pasutijumi.txt");
+        orderFile.saglabatPasutijumu(this);
     }
     
     public String getPasutijumaKopsavilkums() {

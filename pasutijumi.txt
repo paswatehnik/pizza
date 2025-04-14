@@ -1,0 +1,37 @@
+=== Pasūtījums ===
+=== Klienta informācija ===
+Vārds: sdasas
+E-pasts: dasda
+Telefona nr: 43242
+Paņemšana uz vietas
+
+=== Pasūtījuma detaļas ===
+
+Picas:
+- Jūras (Maza (25cm)) x1 - €9.99
+
+=== KOPĀ ===
+€9.99
+
+=== Pasūtījums ===
+=== Klienta informācija ===
+Vārds: makamaamamam
+E-pasts: dfsfs
+Telefona nr: 54353
+Piegādes adrese: sfsdfsfs
+
+=== Pasūtījuma detaļas ===
+
+Picas:
+- Pepperoni (Maza (25cm)) x1 - €6.99
+- Vegetāra (Maza (25cm)) x1 - €6.49
+- Karbonāra (Maza (25cm)) x1 - €8.49
+
+Dzērieni:
+- Ābolu sula x10 - €24.90
+
+Piegāde: €5.00
+
+=== KOPĀ ===
+€56.87
+

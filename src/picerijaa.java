@@ -49,7 +49,7 @@ public class picerijaa extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(new Color(255, 228, 181));
         JButton orderButton = new JButton("Pasūtīt picas");
-        orderButton.setBounds(351, 134, 197, 65);
+        orderButton.setBounds(323, 161, 264, 65);
         orderButton.setFont(new Font("Arial", Font.PLAIN, 29));
         orderButton.setBackground(new Color(60, 179, 113));
         orderButton.setForeground(Color.WHITE);
@@ -71,17 +71,17 @@ public class picerijaa extends JFrame {
         titleLabel.setForeground(new Color(139, 69, 19));
         
         JLabel lblNewLabel = new JLabel("");
-        lblNewLabel.setIcon(new ImageIcon("C:\\Users\\белый\\Desktop\\pizza-testMet\\pictures\\mainLabel.png"));
-        lblNewLabel.setBounds(569, 66, 288, 172);
+        lblNewLabel.setIcon(new ImageIcon("pictures/mainLabel.png"));
+        lblNewLabel.setBounds(586, 71, 288, 172);
         buttonPanel.add(lblNewLabel);
         
         JLabel lblNewLabel_1 = new JLabel("");
-        lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\белый\\Desktop\\pizza-testMet\\pictures\\mainLabel2.png"));
+        lblNewLabel_1.setIcon(new ImageIcon("pictures/mainLabel2.png"));
         lblNewLabel_1.setBounds(588, 325, 219, 203);
         buttonPanel.add(lblNewLabel_1);
         
         JLabel lblNewLabel_2 = new JLabel("");
-        lblNewLabel_2.setIcon(new ImageIcon("C:\\Users\\белый\\Desktop\\pizza-testMet\\pictures\\mainLabel3.png"));
+        lblNewLabel_2.setIcon(new ImageIcon("pictures/mainLabel3.png"));
         lblNewLabel_2.setBounds(-16, 134, 594, 523);
         buttonPanel.add(lblNewLabel_2);
 
@@ -99,6 +99,12 @@ public class picerijaa extends JFrame {
         nameLabel.setBounds(10, 185, 186, 22);
         nameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         panel2.add(nameLabel);
+        
+        JLabel lblNewLabel_3 = new JLabel("");
+        lblNewLabel_3.setIcon(new ImageIcon("pictures/2panel1.png"));
+        lblNewLabel_3.setBounds(72, 127, 696, 523);
+        panel2.add(lblNewLabel_3);
+        
         JTextField nameField = new JTextField(20);
         nameField.setBounds(185, 185, 208, 22);
         nameField.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -589,6 +595,8 @@ public class picerijaa extends JFrame {
         
         contentPane.add(panel1, "Panel1");
         contentPane.add(panel2, "Panel2");
+        
+        
         contentPane.add(panel3, "Panel3");
         contentPane.add(panel4, "Panel4");
         contentPane.add(panel5, "Panel5");
