@@ -41,6 +41,16 @@ public class faili {
         }
     }
     
+    public void saglabatPasutijumu(String pasutijumaTeksts) {
+        try (FileWriter writer = new FileWriter(orderFile, true)) {
+            writer.write("=== Pasūtījums ===\n");
+            writer.write(pasutijumaTeksts);
+            writer.write("\n\n");
+        } catch (IOException e) {
+            System.err.println("Kļūda saglabājot pasūtījumu: " + e.getMessage());
+        }
+    }
+    
     public String lasitPasutijumus() {
         try {
             if (orderFile.exists() && orderFile.length() > 0) {

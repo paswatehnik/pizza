@@ -71,3 +71,69 @@ Dzērieni:
 === KOPĀ ===
 €54.42
 
+=== Pasūtījums ===
+=== Klienta informācija ===
+Vārds: sdfs
+E-pasts: dsada
+Telefona nr: 4232
+Paņemšana uz vietas
+
+=== Pasūtījuma detaļas ===
+
+Picas:
+- Jūras (Maza (25cm)) x1 - €9.99
+
+Dzērieni:
+- Mineralūdens x1 - €1.49
+
+=== KOPĀ ===
+€11.48
+
+=== Pasūtījums ===
+=== Klienta informācija ===
+Vārds: sdfs
+E-pasts: dsada
+Telefona nr: 4232
+Paņemšana uz vietas
+
+=== Pasūtījuma detaļas ===
+
+Picas:
+- Jūras (Maza (25cm)) x1 - €9.99
+
+Dzērieni:
+- Mineralūdens x1 - €1.49
+
+=== KOPĀ ===
+€11.48
+
+=== Pasūtījums ===
+=== Klienta informācija ===
+Vārds: sdfs
+E-pasts: gd
+Telefona nr: 4534
+Paņemšana uz vietas
+
+=== Pasūtījuma detaļas ===
+
+Dzērieni:
+- Mineralūdens x1 - €1.49
+
+=== KOPĀ ===
+€1.49
+
+=== Pasūtījums ===
+=== Klienta informācija ===
+Vārds: sdfs
+E-pasts: gd
+Telefona nr: 4534
+Paņemšana uz vietas
+
+=== Pasūtījuma detaļas ===
+
+Dzērieni:
+- Mineralūdens x1 - €1.49
+
+=== KOPĀ ===
+€1.49
+
