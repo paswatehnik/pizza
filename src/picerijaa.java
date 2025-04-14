@@ -362,7 +362,7 @@ public class picerijaa extends JFrame {
 
         
         
-     // Panel5 - Klienta informācija
+     // Panel5
         JPanel panel5 = new JPanel(new BorderLayout());
         panel5.setBackground(new Color(255, 228, 181));
 

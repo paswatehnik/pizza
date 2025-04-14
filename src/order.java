@@ -43,15 +43,9 @@ public class order {
     
     public String getPasutijumaKopsavilkums() {
         StringBuilder kopsavilkums = new StringBuilder();
-        kopsavilkums.append("Klienta vards: ").append(klients.vards).append("\n");
-        kopsavilkums.append("E-pasts: ").append(klients.epasts).append("\n");
-        kopsavilkums.append("Telefona nr: ").append(klients.telNum).append("\n");
-        if (piegade) {
-            kopsavilkums.append("Piegades adrese: ").append(klients.adresse).append("\n");
-        } else {
-            kopsavilkums.append("Parnemt uz vietas\n");
-        }
-        kopsavilkums.append("\nPasutijuma detalas:\n");
+        kopsavilkums.append("=== Klienta informācija ===\n");
+        kopsavilkums.append(klients.getKlientaInfo());
+        kopsavilkums.append("\n=== Pasūtījuma detaļas ===\n");
         
         if (!picas.isEmpty()) {
             kopsavilkums.append("\nPicas:\n");
@@ -65,7 +59,7 @@ public class order {
         }
         
         if (!dzerieni.isEmpty()) {
-            kopsavilkums.append("\nDzerieni:\n");
+            kopsavilkums.append("\nDzērieni:\n");
             for (int i = 0; i < dzerieni.size(); i++) {
                 dzerieni dzeriens = dzerieni.get(i);
                 kopsavilkums.append("- ").append(dzeriens.nosaukums.get(0))
@@ -75,10 +69,11 @@ public class order {
         }
         
         if (piegade) {
-            kopsavilkums.append("\nPiegade: €5.00\n");
+            kopsavilkums.append("\nPiegāde: €5.00\n");
         }
         
-        kopsavilkums.append("\nKOPA: €").append(String.format("%.2f", pasutijumaCena));
+        kopsavilkums.append("\n=== KOPĀ ===\n");
+        kopsavilkums.append("€").append(String.format("%.2f", pasutijumaCena));
         
         return kopsavilkums.toString();
     }
