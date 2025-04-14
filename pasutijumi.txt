@@ -35,3 +35,39 @@ Piegāde: €5.00
 === KOPĀ ===
 €56.87
 
+=== Pasūtījums ===
+=== Klienta informācija ===
+Vārds: gdgd
+E-pasts: gdfgd
+Telefona nr: 534543
+Paņemšana uz vietas
+
+=== Pasūtījuma detaļas ===
+
+Picas:
+- Karbonāra (Maza (25cm)) x1 - €8.49
+
+Dzērieni:
+- Mineralūdens x1 - €1.49
+
+=== KOPĀ ===
+€9.98
+
+=== Pasūtījums ===
+=== Klienta informācija ===
+Vārds: dsfsdfs
+E-pasts: dasdasas
+Telefona nr: 33123131
+Paņemšana uz vietas
+
+=== Pasūtījuma detaļas ===
+
+Picas:
+- Jūras (Maza (25cm)) x5 - €49.95
+
+Dzērieni:
+- Mineralūdens x3 - €4.47
+
+=== KOPĀ ===
+€54.42
+

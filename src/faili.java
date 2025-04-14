@@ -1,7 +1,9 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.List;
 
 public class faili {
     ArrayList<String> pabOrder;
@@ -38,4 +40,19 @@ public class faili {
             System.err.println("Kļūda saglabājot pasūtījumu: " + e.getMessage());
         }
     }
+    
+    public String lasitPasutijumus() {
+        try {
+            if (orderFile.exists() && orderFile.length() > 0) {
+                List<String> allLines = Files.readAllLines(orderFile.toPath());
+                return String.join("\n", allLines);
+            } else {
+                return "Nav neviena pasūtījuma vēstures.";
+            }
+        } catch (IOException e) {
+            System.err.println("Kļūda lasot pasūtījumus: " + e.getMessage());
+            return "Kļūda ielādējot pasūtījumu vēsturi.";
+        }
+    }
+    
 }

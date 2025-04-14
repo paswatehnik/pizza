@@ -102,8 +102,9 @@ public class picerijaa extends JFrame {
         
         JLabel lblNewLabel_3 = new JLabel("");
         lblNewLabel_3.setIcon(new ImageIcon("pictures/2panel1.png"));
-        lblNewLabel_3.setBounds(72, 127, 696, 523);
-        panel2.add(lblNewLabel_3);
+        lblNewLabel_3.setBounds(127, 223, 696, 523);
+        
+        
         
         JTextField nameField = new JTextField(20);
         nameField.setBounds(185, 185, 208, 22);
@@ -130,7 +131,30 @@ public class picerijaa extends JFrame {
         backButton.setBackground(new Color(220, 20, 60));
         backButton.setForeground(Color.WHITE);
         backButton.addActionListener(e -> System.exit(0));
+        
         panel2.add(backButton);
+        
+        JButton viewOrdersButton_1 = new JButton("Apskatīt pasūtījumus");
+        viewOrdersButton_1.setBounds(381, 557, 264, 65);
+        viewOrdersButton_1.setFont(new Font("Arial", Font.PLAIN, 24));
+        viewOrdersButton_1.setBackground(new Color(100, 149, 237));
+        viewOrdersButton_1.setForeground(Color.WHITE);
+        viewOrdersButton_1.addActionListener(e -> {
+            faili orderFile = new faili("pasutijumi.txt");
+            String orders = orderFile.lasitPasutijumus();
+
+            JTextArea textArea = new JTextArea(orders);
+            textArea.setEditable(false);
+            textArea.setLineWrap(true);
+            textArea.setWrapStyleWord(true);
+
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            scrollPane.setPreferredSize(new Dimension(700, 500));
+
+            JOptionPane.showMessageDialog(picerijaa.this, scrollPane,
+                "Pasūtījumu vēsture", JOptionPane.INFORMATION_MESSAGE);
+        });
+        panel2.add(viewOrdersButton_1);
 
         // Panel3 Pizza
         JPanel panel3 = new JPanel(new BorderLayout());
@@ -595,8 +619,6 @@ public class picerijaa extends JFrame {
         
         contentPane.add(panel1, "Panel1");
         contentPane.add(panel2, "Panel2");
-        
-        
         contentPane.add(panel3, "Panel3");
         contentPane.add(panel4, "Panel4");
         contentPane.add(panel5, "Panel5");
