@@ -256,7 +256,7 @@ public class picerijaa extends JFrame {
                 int daudzums = (Integer) picuDaudzumaSkaititaji.get(i).getValue();
                 if (daudzums > 0) {
                     pica pizza = picuSaraksts.get(i);
-                    String izmers = pizza.izmers.get(0); // Берем первый размер из списка
+                    String izmers = pizza.izmers.get(0);
                     double cena = pizza.cenas.get(0) * daudzums;
                     
                     orderDetails.append(pizza.nosaukums.toString())
