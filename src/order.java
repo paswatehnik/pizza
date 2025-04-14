@@ -5,8 +5,8 @@ public class order {
     private pircejs klients;
     private List<pica> picas;
     private List<dzerieni> dzerieni;
-    private List<Integer> picuDaudzums;
-    private List<Integer> dzerienuDaudzums;
+    List<Integer> picuDaudzums;
+    List<Integer> dzerienuDaudzums;
     double pasutijumaCena;
     private boolean pabeigts;
     private boolean piegade;
@@ -58,6 +58,9 @@ public class order {
                       .append(" (").append(pica.izmers.get(0)).append(")")
                       .append(" x").append(picuDaudzums.get(i))
                       .append(" - €").append(String.format("%.2f", pica.cenas.get(0) * picuDaudzums.get(i))).append("\n");
+                if (pica.nosaukums.get(0).equals("Custom pica") && pica.recepts.size() > 0) {
+                    kopsavilkums.append("  Sastāvdaļas: ").append(pica.recepts.get(0)).append("\n");
+                }
             }
         }
         

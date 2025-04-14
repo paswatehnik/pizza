@@ -137,3 +137,75 @@ Dzērieni:
 === KOPĀ ===
 €1.49
 
+=== Pasūtījums ===
+=== Klienta informācija ===
+Vārds: аываыаы
+E-pasts: ваыаы
+Telefona nr: 4343
+Paņemšana uz vietas
+
+=== Pasūtījuma detaļas ===
+
+Picas:
+- Jūras (Maza (25cm)) x1 - €9.99
+
+Dzērieni:
+- Mineralūdens x1 - €1.49
+
+=== KOPĀ ===
+€11.48
+
+=== Pasūtījums ===
+=== Klienta informācija ===
+Vārds: аываыаы
+E-pasts: ваыаы
+Telefona nr: 4343
+Paņemšana uz vietas
+
+=== Pasūtījuma detaļas ===
+
+Picas:
+- Jūras (Maza (25cm)) x1 - €9.99
+
+Dzērieni:
+- Mineralūdens x1 - €1.49
+
+=== KOPĀ ===
+€11.48
+
+=== Pasūtījums ===
+=== Klienta informācija ===
+Vārds: fsdfs
+E-pasts: fsd
+Telefona nr: 43
+Paņemšana uz vietas
+
+=== Pasūtījuma detaļas ===
+
+Picas:
+- Meksikāņu (Maza (25cm)) x1 - €7.99
+
+Dzērieni:
+- Sprite x1 - €1.99
+
+=== KOPĀ ===
+€9.98
+
+=== Pasūtījums ===
+=== Klienta informācija ===
+Vārds: fsdfs
+E-pasts: fsd
+Telefona nr: 43
+Paņemšana uz vietas
+
+=== Pasūtījuma detaļas ===
+
+Picas:
+- Meksikāņu (Maza (25cm)) x1 - €7.99
+
+Dzērieni:
+- Sprite x1 - €1.99
+
+=== KOPĀ ===
+€9.98
+
