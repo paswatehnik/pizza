@@ -16,8 +16,7 @@ public class picerijaa extends JFrame {
     private List<pica> picuSaraksts;
     private List<dzerieni> dzerienuSaraksts;
     private List<JSpinner> picuDaudzumaSkaititaji;
-    private List<JSpinner> dzerienuDaudzumaSkaititaji;
-    
+    private List<JSpinner> dzerienuDaudzumaSkaititaji;   
     private List<String> customIngredients = new ArrayList<>();
     private List<JCheckBox> ingredientCheckboxes = new ArrayList<>();
 
@@ -315,12 +314,10 @@ public class picerijaa extends JFrame {
         drinksLabel.setForeground(new Color(139, 69, 19));
         panel4.add(drinksLabel, BorderLayout.NORTH);
 
-        List<dzerieni> drinks = dzerieni.getDrinks();
         JPanel drinksOptionsPanel = new JPanel();
         drinksOptionsPanel.setLayout(new BoxLayout(drinksOptionsPanel, BoxLayout.Y_AXIS));
         drinksOptionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        List<JSpinner> drinksQuantitySpinners = new ArrayList<>();
 
         for (dzerieni drink : dzerienuSaraksts) {
             JPanel drinkPanel = new JPanel(new BorderLayout(10, 10));
@@ -385,11 +382,20 @@ public class picerijaa extends JFrame {
                 aktualaisPasutijums = new order(new pircejs(0, pircejaVards, "", "", false));
             }
             
-            aktualaisPasutijums.getPicas().clear();
-            aktualaisPasutijums.getDzerieni().clear();
             aktualaisPasutijums.picuDaudzums.clear();
             aktualaisPasutijums.dzerienuDaudzums.clear();
+            
+            double pizzasCena = aktualaisPasutijums.getPasutijumaCena();
             aktualaisPasutijums.pasutijumaCena = 0.0;
+            
+            for (int i = 0; i < dzerienuSaraksts.size(); i++) {
+                int daudzums = (Integer) dzerienuDaudzumaSkaititaji.get(i).getValue();
+                if (daudzums > 0) {
+                    aktualaisPasutijums.pievienotDzerienu(dzerienuSaraksts.get(i), daudzums);
+                }
+            }
+            
+            aktualaisPasutijums.pasutijumaCena += pizzasCena;
             
             for (int i = 0; i < picuSaraksts.size(); i++) {
                 int daudzums = (Integer) picuDaudzumaSkaititaji.get(i).getValue();
@@ -531,7 +537,22 @@ public class picerijaa extends JFrame {
                 int telNum = Integer.parseInt(telefons);
                 pircejs klients = new pircejs(telNum, pircejaVards, epasts, adrese, piegade);
                 
-                aktualaisPasutijums = new order(klients);
+                order jaunaisPasutijums = new order(klients);
+
+             if (aktualaisPasutijums != null) {
+                 List<pica> vecasPicas = aktualaisPasutijums.getPicas();
+                 List<Integer> daudzumi = aktualaisPasutijums.picuDaudzums;
+
+                 for (int i = 0; i < vecasPicas.size(); i++) {
+                     pica p = vecasPicas.get(i);
+                     if (p.nosaukums.get(0).equals("Pašizveidota pica")) {
+                         jaunaisPasutijums.pievienotPicu(p, daudzumi.get(i));
+                     }
+                 }
+             }
+
+             aktualaisPasutijums = jaunaisPasutijums;
+
                 
                 for (int i = 0; i < picuSaraksts.size(); i++) {
                     int daudzums = (Integer) picuDaudzumaSkaititaji.get(i).getValue();
@@ -658,103 +679,167 @@ public class picerijaa extends JFrame {
         titleLabel1.setForeground(new Color(139, 69, 19));
         panel7.add(titleLabel1, BorderLayout.NORTH);
 
-        JPanel ingredientsPanel = new JPanel();
-        ingredientsPanel.setLayout(new BoxLayout(ingredientsPanel, BoxLayout.Y_AXIS));
-        ingredientsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel customPizzaPanel = new JPanel();
+        customPizzaPanel.setLayout(new BoxLayout(customPizzaPanel, BoxLayout.Y_AXIS));
+        customPizzaPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        customPizzaPanel.setBackground(new Color(255, 255, 255, 200));
 
-        JLabel basePriceLabel = new JLabel("Pamata cena (maza pica): €3.00");
+        JPanel pricePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        pricePanel.setBackground(new Color(255, 255, 255, 0));
+        JLabel basePriceLabel = new JLabel("Pamata cena: €3.00 (Maza) + €0.50 par katru sastāvdaļu");
         basePriceLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        ingredientsPanel.add(basePriceLabel);
-        ingredientsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        pricePanel.add(basePriceLabel);
+        customPizzaPanel.add(pricePanel);
+        customPizzaPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        JLabel selectLabel = new JLabel("Izvēlieties sastāvdaļas (katra +€0.50):");
-        selectLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-        ingredientsPanel.add(selectLabel);
-        ingredientsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        JPanel saucePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        saucePanel.setBackground(new Color(255, 255, 255, 0));
+        JLabel sauceLabel = new JLabel("Izvēlieties mērci (obligāti):");
+        sauceLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        saucePanel.add(sauceLabel);
+        
+        ButtonGroup sauceGroup = new ButtonGroup();
+        JRadioButton tomatoSauce = new JRadioButton("Tomātu mērce");
+        JRadioButton creamSauce = new JRadioButton("Krējuma mērce");
+        tomatoSauce.setFont(new Font("Arial", Font.PLAIN, 14));
+        creamSauce.setFont(new Font("Arial", Font.PLAIN, 14));
+        sauceGroup.add(tomatoSauce);
+        sauceGroup.add(creamSauce);
+        saucePanel.add(tomatoSauce);
+        saucePanel.add(creamSauce);
+        customPizzaPanel.add(saucePanel);
+        customPizzaPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        for (String ingredient : customIngredients) {
+        JPanel sizePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        sizePanel.setBackground(new Color(255, 255, 255, 0));
+        JLabel sizeLabel = new JLabel("Izvēlieties izmēru:");
+        sizeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        sizePanel.add(sizeLabel);
+
+        String[] sizes = {"Maza (25cm) €3.00", "Vidēja (30cm) €5.00", "Liela (35cm) €7.00"};
+        JComboBox<String> sizeCombo = new JComboBox<>(sizes);
+        sizeCombo.setFont(new Font("Arial", Font.PLAIN, 14));
+        sizePanel.add(sizeCombo);
+        customPizzaPanel.add(sizePanel);
+        customPizzaPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        JLabel ingredientsLabel = new JLabel("Izvēlieties papildinājumus (vismaz 1):");
+        ingredientsLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        customPizzaPanel.add(ingredientsLabel);
+        customPizzaPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        String[] ingredients = {
+        	    "Mocarellas siers", "Pepperoni", "Šķiņķis", "Sēnes", 
+        	    "Sīpoli", "Ananāsi", "Jalapeno pipari", "Olivas", "Gambas"
+        	};
+
+        JPanel ingredientsGrid = new JPanel(new GridLayout(0, 2, 10, 5));
+        ingredientsGrid.setBackground(new Color(255, 255, 255, 0));
+
+        for (String ingredient : ingredients) {
             JCheckBox checkBox = new JCheckBox(ingredient);
             checkBox.setFont(new Font("Arial", Font.PLAIN, 14));
-            checkBox.setBackground(new Color(255, 255, 255, 200));
+            ingredientsGrid.add(checkBox);
             ingredientCheckboxes.add(checkBox);
-            ingredientsPanel.add(checkBox);
-            ingredientsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         }
 
-        JScrollPane scrollPane1 = new JScrollPane(ingredientsPanel);
-        panel7.add(scrollPane1, BorderLayout.CENTER);
+        customPizzaPanel.add(ingredientsGrid);
 
-        JPanel bottomPanel1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JScrollPane scrollPane7 = new JScrollPane(customPizzaPanel);
+        panel7.add(scrollPane7, BorderLayout.CENTER);
+
+        JPanel bottomPanel7 = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        bottomPanel7.setBackground(new Color(233, 200, 200));
 
         JButton addToOrderButton = new JButton("Pievienot pasūtījumam");
         addToOrderButton.setFont(new Font("Arial", Font.PLAIN, 18));
         addToOrderButton.setBackground(new Color(60, 179, 113));
         addToOrderButton.setForeground(Color.WHITE);
         addToOrderButton.addActionListener(e -> {
-            List<String> selectedIngredients = new ArrayList<>();
-            for (int i = 0; i < ingredientCheckboxes.size(); i++) {
-                if (ingredientCheckboxes.get(i).isSelected()) {
-                    selectedIngredients.add(customIngredients.get(i));
-                }
-            }
-            
-            boolean hasSauce = selectedIngredients.stream()
-                .anyMatch(ing -> ing.contains("mērce"));
-            
-            if (!hasSauce) {
+            if (!tomatoSauce.isSelected() && !creamSauce.isSelected()) {
                 JOptionPane.showMessageDialog(this, 
-                    "Lūdzu, izvēlieties vismaz vienu mērci (Tomātu mērce vai Krējuma mērce)!", 
+                    "Lūdzu, izvēlieties mērci!", 
                     "Kļūda", JOptionPane.ERROR_MESSAGE);
                 return;
+            }
+            
+            List<String> selectedIngredients = new ArrayList<>();
+            if (tomatoSauce.isSelected()) {
+                selectedIngredients.add("Tomātu mērce");
+            } else {
+                selectedIngredients.add("Krējuma mērce");
+            }
+            
+            for (JCheckBox checkBox : ingredientCheckboxes) {
+                if (checkBox.isSelected()) {
+                    selectedIngredients.add(checkBox.getText());
+                }
             }
             
             if (selectedIngredients.size() < 2) {
                 JOptionPane.showMessageDialog(this, 
-                    "Lūdzu, izvēlieties vismaz vienu mērci un vienu papildinājumu!", 
+                    "Lūdzu, izvēlieties vismaz vienu papildinājumu!", 
                     "Kļūda", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             
+            // izveidot picu
             pica customPizza = new pica(false);
-            customPizza.nosaukums.add("Custom pica");
-            customPizza.izmers.add("Maza (25cm)");
-            double price = 3.00 + (selectedIngredients.size() * 0.5);
-            customPizza.cenas.add(price);
+            customPizza.nosaukums.add("Pašizveidota pica");
+            customPizza.izmers.add((String) sizeCombo.getSelectedItem());
             
-            String sauce = selectedIngredients.stream()
-                .filter(ing -> ing.contains("mērce"))
-                .findFirst()
-                .orElse("Tomātu mērce");
-            customPizza.merce.add(sauce);
+            // cena
+            double basePrice = 3.00;
+            if (sizeCombo.getSelectedIndex() == 1) basePrice = 5.00;
+            if (sizeCombo.getSelectedIndex() == 2) basePrice = 7.00;
             
-            for (String ingredient : selectedIngredients) {
-                if (!ingredient.contains("mērce")) {
-                    customPizza.papildinajums.add(ingredient);
-                }
+            double ingredientsPrice = (selectedIngredients.size() - 1) * 0.5; // -1 because sauce is not extra
+            double totalPrice = basePrice + ingredientsPrice;
+            
+            customPizza.cenas.add(totalPrice);
+            customPizza.merce.add(selectedIngredients.get(0));
+            customPizza.recepts.add(String.join(", ", selectedIngredients));
+            customPizza.picture = "pictures/custom_pizza.jpg";
+            
+            for (int i = 1; i < selectedIngredients.size(); i++) {
+                customPizza.papildinajums.add(selectedIngredients.get(i));
             }
             
+            if (aktualaisPasutijums == null) {
+                aktualaisPasutijums = new order(new pircejs(0, pircejaVards, "", "", false));
+            }
             
+            aktualaisPasutijums.pievienotPicu(customPizza, 1);
             
+            JOptionPane.showMessageDialog(this,
+                "Pašizveidotā pica pievienota pasūtījumam!\n" +
+                "Nosaukums: Pašizveidota pica\n" +
+                "Izmērs: " + sizeCombo.getSelectedItem() + "\n" +
+                "Sastāvdaļas: " + String.join(", ", selectedIngredients) + "\n" +
+                "Cena: €" + String.format("%.2f", totalPrice),
+                "Pica pievienota", JOptionPane.INFORMATION_MESSAGE);
             
-            cardLayout.show(contentPane, "Panel3");
+            cardLayout.show(contentPane, "Panel4");
         });
+        bottomPanel7.add(addToOrderButton);
 
-        bottomPanel1.add(addToOrderButton);
-
-        JButton backButton1 = new JButton("Atpakal");
-        backButton1.setFont(new Font("Arial", Font.PLAIN, 18));
-        backButton1.setBackground(new Color(220, 20, 60));
-        backButton1.setForeground(Color.WHITE);
-        backButton1.addActionListener(e -> {
-        	
+        JButton backButton7 = new JButton("Atpakaļ");
+        backButton7.setFont(new Font("Arial", Font.PLAIN, 18));
+        backButton7.setBackground(new Color(220, 20, 60));
+        backButton7.setForeground(Color.WHITE);
+        backButton7.addActionListener(e -> {
+            sauceGroup.clearSelection();
+            sizeCombo.setSelectedIndex(0);
             for (JCheckBox checkBox : ingredientCheckboxes) {
                 checkBox.setSelected(false);
             }
             cardLayout.show(contentPane, "Panel3");
         });
-        bottomPanel1.add(backButton1);
+        bottomPanel7.add(backButton7);
 
-        panel7.add(bottomPanel1, BorderLayout.SOUTH);       
+        panel7.add(bottomPanel7, BorderLayout.SOUTH);  
+        
+        
         
         contentPane.add(panel1, "Panel1");
         contentPane.add(panel2, "Panel2");

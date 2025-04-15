@@ -49,40 +49,48 @@ public class order {
         kopsavilkums.append("=== Klienta informācija ===\n");
         kopsavilkums.append(klients.getKlientaInfo());
         kopsavilkums.append("\n=== Pasūtījuma detaļas ===\n");
-        
+
         if (!picas.isEmpty()) {
             kopsavilkums.append("\nPicas:\n");
             for (int i = 0; i < picas.size(); i++) {
                 pica pica = picas.get(i);
-                kopsavilkums.append("- ").append(pica.nosaukums.get(0))
-                      .append(" (").append(pica.izmers.get(0)).append(")")
-                      .append(" x").append(picuDaudzums.get(i))
-                      .append(" - €").append(String.format("%.2f", pica.cenas.get(0) * picuDaudzums.get(i))).append("\n");
-                if (pica.nosaukums.get(0).equals("Custom pica") && pica.recepts.size() > 0) {
+                int daudzums = picuDaudzums.get(i);
+                String nosaukums = pica.nosaukums.get(0);
+                String izmers = pica.izmers.get(0);
+                double cena = pica.cenas.get(0);
+
+                kopsavilkums.append("- ").append(nosaukums)
+                      .append(" (").append(izmers).append(")")
+                      .append(" x").append(daudzums)
+                      .append(" - €").append(String.format("%.2f", cena * daudzums))
+                      .append("\n");
+
+                if (nosaukums.equalsIgnoreCase("Pašizveidota pica") && !pica.recepts.isEmpty()) {
                     kopsavilkums.append("  Sastāvdaļas: ").append(pica.recepts.get(0)).append("\n");
                 }
             }
         }
-        
         if (!dzerieni.isEmpty()) {
             kopsavilkums.append("\nDzērieni:\n");
             for (int i = 0; i < dzerieni.size(); i++) {
                 dzerieni dzeriens = dzerieni.get(i);
+                int daudzums = dzerienuDaudzums.get(i);
+                double cena = dzeriens.cena.get(0);
+
                 kopsavilkums.append("- ").append(dzeriens.nosaukums.get(0))
-                      .append(" x").append(dzerienuDaudzums.get(i))
-                      .append(" - €").append(String.format("%.2f", dzeriens.cena.get(0) * dzerienuDaudzums.get(i))).append("\n");
+                      .append(" x").append(daudzums)
+                      .append(" - €").append(String.format("%.2f", cena * daudzums)).append("\n");
             }
         }
-        
         if (piegade) {
             kopsavilkums.append("\nPiegāde: €5.00\n");
         }
-        
         kopsavilkums.append("\n=== KOPĀ ===\n");
         kopsavilkums.append("€").append(String.format("%.2f", pasutijumaCena));
-        
+
         return kopsavilkums.toString();
     }
+
     
     public pircejs getKlients() { return klients; }
     public List<pica> getPicas() { return picas; }
